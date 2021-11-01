@@ -66,6 +66,7 @@ function dumper.deepCopy(var)
 end
 
 function dumper.dumpVariables()
+    dumper.dumpVariable = {}
     for k,v in pairs(_G) do
         if k ~= "_G" and k ~= "package" and k ~= "dumper" then
             dumper.deepCopy('["' .. k .. '"]')
@@ -75,6 +76,7 @@ end
 
 function dumper.dumpCurrentLuaStatus()
     dumper.dumpVariables()
+    collectgarbage()
     ___temp = serpent.dump(_G)
 end
 
@@ -96,6 +98,7 @@ function dumper.loadDumpedLuaState()
                 local a = loadstring("_G" .. v .. " = ___temp" .. v)
                 setfenv(a, getfenv())
                 a()
+                _G["a"] = nil
             end
         end
 
